@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "Launch Readiness Agent",
+    "description": "API collection for testing the Launch Readiness Agent endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Linear Projects",
+      "item": [
+        {
+          "name": "List Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/linear/projects",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "linear", "projects"]
+            }
+          }
+        },
+        {
+          "name": "Get Project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/linear/projects/{{PROJECT_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "linear", "projects", "{{PROJECT_ID}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state\": \"in_progress\",\n  \"progress\": 50,\n  \"description\": \"Project is halfway complete\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/linear/projects/{{PROJECT_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "linear", "projects", "{{PROJECT_ID}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub Webhooks",
+      "item": [
+        {
+          "name": "Push Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-GitHub-Event",
+                "value": "push"
+              },
+              {
+                "key": "X-Hub-Signature-256",
+                "value": "{{GITHUB_WEBHOOK_SIGNATURE}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ref\": \"refs/heads/main\",\n  \"repository\": {\n    \"id\": 123,\n    \"name\": \"test-repo\",\n    \"full_name\": \"org/test-repo\",\n    \"private\": false,\n    \"owner\": {\n      \"login\": \"testuser\",\n      \"id\": 456,\n      \"type\": \"User\"\n    }\n  },\n  \"commits\": [\n    {\n      \"id\": \"abc123\",\n      \"message\": \"feat: implement new feature ABC-123\",\n      \"timestamp\": \"2024-02-20T12:00:00Z\",\n      \"url\": \"https://github.com/org/repo/commit/abc123\",\n      \"author\": {\n        \"login\": \"testuser\",\n        \"id\": 456,\n        \"type\": \"User\"\n      }\n    }\n  ],\n  \"sender\": {\n    \"login\": \"testuser\",\n    \"id\": 456,\n    \"type\": \"User\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/github/webhook",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "github", "webhook"]
+            }
+          }
+        },
+        {
+          "name": "Pull Request Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-GitHub-Event",
+                "value": "pull_request"
+              },
+              {
+                "key": "X-Hub-Signature-256",
+                "value": "{{GITHUB_WEBHOOK_SIGNATURE}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"opened\",\n  \"pull_request\": {\n    \"id\": 789,\n    \"number\": 42,\n    \"state\": \"open\",\n    \"title\": \"Feature: Implement XYZ-789\",\n    \"body\": \"Implements the new feature described in XYZ-789\",\n    \"user\": {\n      \"login\": \"testuser\",\n      \"id\": 456,\n      \"type\": \"User\"\n    },\n    \"created_at\": \"2024-02-20T12:00:00Z\",\n    \"updated_at\": \"2024-02-20T12:00:00Z\",\n    \"merged_at\": null,\n    \"head\": {\n      \"ref\": \"feature/xyz-789\",\n      \"sha\": \"def456\"\n    },\n    \"base\": {\n      \"ref\": \"main\",\n      \"sha\": \"abc123\"\n    }\n  },\n  \"repository\": {\n    \"id\": 123,\n    \"name\": \"test-repo\",\n    \"full_name\": \"org/test-repo\",\n    \"private\": false,\n    \"owner\": {\n      \"login\": \"testuser\",\n      \"id\": 456,\n      \"type\": \"User\"\n    }\n  },\n  \"sender\": {\n    \"login\": \"testuser\",\n    \"id\": 456,\n    \"type\": \"User\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/github/webhook",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "github", "webhook"]
+            }
+          }
+        },
+        {
+          "name": "Workflow Run Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-GitHub-Event",
+                "value": "workflow_run"
+              },
+              {
+                "key": "X-Hub-Signature-256",
+                "value": "{{GITHUB_WEBHOOK_SIGNATURE}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"completed\",\n  \"workflow_run\": {\n    \"id\": 123456,\n    \"name\": \"CI/CD Pipeline\",\n    \"status\": \"completed\",\n    \"conclusion\": \"success\",\n    \"workflow_id\": 789,\n    \"head_branch\": \"feature/abc-123\",\n    \"head_sha\": \"def456\",\n    \"run_number\": 42,\n    \"event\": \"push\",\n    \"url\": \"https://github.com/org/repo/actions/runs/123456\",\n    \"created_at\": \"2024-02-20T12:00:00Z\",\n    \"updated_at\": \"2024-02-20T12:10:00Z\"\n  },\n  \"repository\": {\n    \"id\": 123,\n    \"name\": \"test-repo\",\n    \"full_name\": \"org/test-repo\",\n    \"private\": false,\n    \"owner\": {\n      \"login\": \"testuser\",\n      \"id\": 456,\n      \"type\": \"User\"\n    }\n  },\n  \"sender\": {\n    \"login\": \"testuser\",\n    \"id\": 456,\n    \"type\": \"User\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/github/webhook",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "github", "webhook"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// You can add pre-request scripts here",
+          "// For example, to generate webhook signatures"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Add your test scripts here",
+          "pm.test(\"Status code is 200\", function () {",
+          "    pm.response.to.have.status(200);",
+          "});",
+          "",
+          "pm.test(\"Response has success flag\", function () {",
+          "    var jsonData = pm.response.json();",
+          "    pm.expect(jsonData.success).to.be.true;",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "PROJECT_ID",
+      "value": "your-project-id",
+      "type": "string"
+    },
+    {
+      "key": "GITHUB_WEBHOOK_SIGNATURE",
+      "value": "sha256=your-signature-here",
+      "type": "string"
+    }
+  ]
+} 
