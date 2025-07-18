@@ -1,13 +1,23 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Literal
 from datetime import datetime
+
+# Linear project states
+ProjectState = Literal[
+    "backlog",
+    "planned",
+    "in_progress",
+    "paused",
+    "completed",
+    "canceled"
+]
 
 class LinearProject(BaseModel):
     """Model representing a Linear project"""
     id: str
     name: str
     description: Optional[str] = None
-    state: str
+    state: ProjectState
     created_at: datetime
     updated_at: datetime
     target_date: Optional[datetime] = None
@@ -26,8 +36,7 @@ class LinearIssue(BaseModel):
 
 class ProjectUpdateRequest(BaseModel):
     """Request model for updating project status"""
-    project_id: str
-    state: str
+    state: ProjectState
     progress: Optional[float] = Field(None, ge=0, le=100)
     description: Optional[str] = None
 

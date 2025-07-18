@@ -53,23 +53,24 @@ class PullRequest(BaseModel):
     head: Dict[str, Any]
     base: Dict[str, Any]
 
-class WebhookPayload(BaseModel):
+class BaseWebhookPayload(BaseModel):
     """Base model for GitHub webhook payloads"""
-    action: Optional[str]
     repository: GitHubRepository
     sender: GitHubUser
 
-class PushEvent(WebhookPayload):
+class PushEvent(BaseWebhookPayload):
     """Model for push events"""
     ref: str
     before: str
     after: str
     commits: List[GitHubCommit]
 
-class PullRequestEvent(WebhookPayload):
+class PullRequestEvent(BaseWebhookPayload):
     """Model for pull request events"""
+    action: str  # opened, closed, reopened, etc.
     pull_request: PullRequest
 
-class WorkflowRunEvent(WebhookPayload):
+class WorkflowRunEvent(BaseWebhookPayload):
     """Model for workflow run events"""
+    action: str  # requested, in_progress, completed
     workflow_run: WorkflowRun 

@@ -4,15 +4,21 @@ from dotenv import load_dotenv
 import os
 import logging
 
-# Load environment variables
-load_dotenv()
-
 # Configure logging
 logging.basicConfig(
     level=os.getenv("LOG_LEVEL", "INFO"),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+# Load environment variables
+load_dotenv()
+
+# Debug: Print environment variables (without sensitive values)
+logger.info("Environment variables loaded:")
+logger.info(f"LINEAR_API_KEY set: {'Yes' if os.getenv('LINEAR_API_KEY') else 'No'}")
+logger.info(f"LINEAR_API_URL set: {'Yes' if os.getenv('LINEAR_API_URL') else 'No'}")
+logger.info(f"GITHUB_WEBHOOK_SECRET set: {'Yes' if os.getenv('GITHUB_WEBHOOK_SECRET') else 'No'}")
 
 app = FastAPI(
     title="Launch Readiness Agent",

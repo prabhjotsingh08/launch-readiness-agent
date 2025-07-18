@@ -18,7 +18,7 @@ def verify_github_webhook(signature: str, payload: bytes) -> bool:
     if not signature or not signature.startswith("sha256="):
         return False
 
-    secret = os.getenv("GITHUB_WEBHOOK_SECRET", "").encode()
+    secret = os.getenv("GITHUB_WEBHOOK_SECRET", "").encode('utf-8')
     if not secret:
         raise ValueError("GITHUB_WEBHOOK_SECRET environment variable is not set")
 
@@ -40,6 +40,9 @@ def extract_linear_issue_id(text: str) -> Optional[str]:
     Returns:
         Optional[str]: Linear issue ID if found, None otherwise
     """
+    if not text:
+        return None
+        
     # Linear issue format: ABC-123
     pattern = r'([A-Z]{2,}-\d+)'
     match = re.search(pattern, text)
